@@ -2228,8 +2228,7 @@
     }
 
     // ── LIVE AI CHATBOT ──
-    const OPENROUTER_API_KEY = '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';
-    const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
+    const OPENROUTER_URL = '/api/chat';
     const AI_MODELS = [
       'meta-llama/llama-3.2-3b-instruct:free',
       'nvidia/nemotron-nano-9b-v2:free',
@@ -2238,12 +2237,6 @@
 
     const chatHistory = [];
     let isGenerating = false;
-
-    function getOpenRouterReferer() {
-      if (typeof location === 'undefined') return 'http://localhost';
-      if (location.protocol === 'file:') return 'http://127.0.0.1:5500'; // Common local server
-      return location.origin || 'http://localhost';
-    }
 
     // Basic markdown parser for AI responses
     function parseMarkdown(text) {
@@ -2272,10 +2265,7 @@
           const res = await fetch(OPENROUTER_URL, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-              'HTTP-Referer': getOpenRouterReferer(),
-              'X-Title': 'BatiCOST Premium'
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({
               model: model,
