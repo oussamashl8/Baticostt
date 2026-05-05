@@ -1,0 +1,2555 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BatiCOST – Estimation BTP Premium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0B0F19;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --bg-card-hover: rgba(255, 255, 255, 0.06);
+      --gold: #F5C842;
+      --gold-glow: rgba(245, 200, 66, 0.4);
+      --gold-dark: #D9A800;
+      --text-main: #FFFFFF;
+      --text-muted: #94A3B8;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(245, 200, 66, 0.5);
+
+      --ff-display: 'Outfit', sans-serif;
+      --ff-body: 'Inter', sans-serif;
+
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.2);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.4);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px
+    }
+
+    body {
+      font-family: var(--ff-body);
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow-x: hidden;
+      line-height: 1.6;
+      transition: direction 0.3s ease;
+    }
+
+    [dir="rtl"] {
+      font-family: 'Cairo', sans-serif;
+      --ff-body: 'Cairo', sans-serif;
+      --ff-display: 'Cairo', sans-serif;
+      text-align: right;
+    }
+
+    [dir="rtl"] .hero-cta svg { transform: scaleX(-1); }
+    [dir="rtl"] .chat-send-btn svg { transform: scaleX(-1); }
+    [dir="rtl"] .nav-links { margin-right: auto; margin-left: 0; }
+    [dir="rtl"] .pc-features li svg { margin-left: 10px; margin-right: 0; }
+    [dir="rtl"] .c-item .c-icon { margin-left: 1.2rem; margin-right: 0; }
+    [dir="rtl"] .msg.user { flex-direction: row; }
+    [dir="rtl"] .msg:not(.user) { flex-direction: row; }
+    [dir="rtl"] .chat-top { gap: 1rem; }
+
+    .nav-links a, .hero-title, .hero-sub, .hero-cta, .hero-badge span, .sec-label, .sec-title, .sec-desc, .pc-name, .pc-sub, .pc-btn, .srv-card h3, .srv-card p, .h-stat .hl, .calc-submit, .cf-submit, .ck-title, .ck-subtitle, #ckBtnText {
+      transition: opacity 0.3s ease;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit
+    }
+
+    img {
+      max-width: 100%;
+      display: block
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar {
+      width: 6px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark)
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gold);
+      border-radius: 3px
+    }
+
+    /* ── BACKGROUND GLOWS ── */
+    .ambient-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--gold-glow) 0%, transparent 60%);
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.3;
+    }
+
+    .glow-1 {
+      top: -100px;
+      left: -150px;
+    }
+
+    .glow-2 {
+      bottom: 20%;
+      right: -200px;
+      background: radial-gradient(circle, rgba(148, 163, 184, 0.1) 0%, transparent 60%);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 99;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6%;
+      height: 72px;
+      background: rgba(11, 15, 25, 0.7);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .logo {
+      font-family: var(--ff-display);
+      font-size: 1.5rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .logo-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 12px var(--gold-glow);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    .nav-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-main);
+    }
+
+    .nav-btn {
+      background: transparent;
+      color: var(--gold);
+      padding: 0.5rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      border: 1px solid var(--gold);
+    }
+
+    .nav-btn:hover {
+      background: var(--gold);
+      color: var(--bg-dark);
+      box-shadow: 0 0 20px var(--gold-glow);
+    }
+
+    .lang-switch {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 3px;
+      margin-left: auto;
+      margin-right: 2rem;
+    }
+
+    [dir="rtl"] .lang-switch {
+      margin-left: 2rem;
+      margin-right: auto;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .lang-btn.active {
+      background: var(--gold);
+      color: var(--bg-dark);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text-main);
+      transition: 0.3s;
+    }
+
+    .mob-menu {
+      display: none;
+      position: fixed;
+      top: 72px;
+      left: 0;
+      right: 0;
+      z-index: 98;
+      background: rgba(11, 15, 25, 0.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+    }
+
+    .mob-menu.open {
+      display: flex;
+    }
+
+    .mob-menu a {
+      padding: 1.2rem 6%;
+      font-size: 1.1rem;
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── HERO ── */
+    #home {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 140px 5% 80px;
+      position: relative;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245, 200, 66, 0.1);
+      color: var(--gold);
+      border: 1px solid rgba(245, 200, 66, 0.2);
+      padding: 0.4rem 1.2rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .hero-badge .hb-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: hbpulse 2s infinite;
+    }
+
+    @keyframes hbpulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 var(--gold-glow)
+      }
+
+      50% {
+        opacity: 0.5;
+        box-shadow: 0 0 10px 4px var(--gold-glow)
+      }
+    }
+
+    h1.hero-title {
+      font-family: var(--ff-display);
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 1.5rem;
+    }
+
+    h1.hero-title em {
+      color: var(--gold);
+      font-style: normal;
+      position: relative;
+    }
+
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      font-weight: 400;
+      line-height: 1.7;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--gold);
+      color: var(--bg-dark);
+      padding: 1.2rem 3rem;
+      border-radius: 50px;
+      font-family: var(--ff-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 30px var(--gold-glow);
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px var(--gold-glow);
+      background: var(--gold-dark);
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 4rem;
+      margin-top: 5rem;
+      padding-top: 4rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .h-stat .hn {
+      font-family: var(--ff-display);
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 0.2rem;
+    }
+
+    .h-stat .hl {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 500;
+    }
+
+    /* ── SHARED SECTION ── */
+    section:not(#home) {
+      padding: 100px 6%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sec-label {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .sec-title {
+      font-family: var(--ff-display);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    .sec-title em {
+      color: var(--gold);
+      font-style: normal;
+    }
+
+    .sec-desc {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 600px;
+      line-height: 1.7;
+      margin-bottom: 4rem;
+    }
+
+    /* ── ESTIMATOR ── */
+    .estimator-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .glass-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      backdrop-filter: blur(24px);
+      box-shadow: var(--shadow-lg);
+      transition: border-color 0.3s;
+    }
+
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-row label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .form-input {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.2rem;
+      font-family: var(--ff-body);
+      font-size: 1rem;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .form-input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px var(--gold-glow);
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .form-input option {
+      background: var(--bg-dark);
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .calc-submit {
+      width: 100%;
+      background: var(--text-main);
+      color: var(--bg-dark);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 1.2rem;
+      font-family: var(--ff-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 1rem;
+    }
+
+    .calc-submit:hover {
+      background: var(--gold);
+      box-shadow: 0 8px 25px var(--gold-glow);
+      transform: translateY(-2px);
+    }
+
+    /* RESULT PANEL */
+    .result-panel {
+      position: sticky;
+      top: 100px;
+    }
+
+    .rp-title {
+      font-family: var(--ff-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .rp-title::before {
+      content: '';
+      display: block;
+      width: 12px;
+      height: 12px;
+      background: var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--gold-glow);
+    }
+
+    .rp-empty {
+      text-align: center;
+      padding: 3rem 0;
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .rp-empty .big-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      display: block;
+      opacity: 0.3;
+    }
+
+    .result-total {
+      text-align: center;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .rt-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .rt-val {
+      font-family: var(--ff-display);
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1;
+      text-shadow: 0 0 30px var(--gold-glow);
+    }
+
+    .rt-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.8rem;
+    }
+
+    .mat-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .mat-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+    }
+
+    .mat-name {
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .mat-val {
+      font-family: var(--ff-display);
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 1.1rem;
+    }
+
+    .mat-bar-wrap {
+      margin-top: 0.6rem;
+    }
+
+    .mat-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+    }
+
+    .mat-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+      border-radius: 3px;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 10px var(--gold-glow);
+    }
+
+    .result-range {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .rr-card {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: var(--radius-sm);
+      padding: 1.2rem;
+      text-align: center;
+    }
+
+    .rrc-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .rrc-val {
+      font-family: var(--ff-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* ── CHATBOT ── */
+    .chat-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .chat-samples {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .sample-q {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.2rem;
+      font-size: 0.9rem;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sample-q:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--gold);
+      transform: translateX(5px);
+    }
+
+    .sample-q i {
+      color: var(--gold);
+    }
+
+    .chat-window {
+      background: rgba(11, 15, 25, 0.6);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      backdrop-filter: blur(24px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      height: 600px;
+    }
+
+    .chat-top {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .chat-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 15px var(--gold-glow);
+      color: var(--bg-dark);
+      font-weight: 800;
+      font-family: var(--ff-display);
+    }
+
+    .chat-nm {
+      font-family: var(--ff-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text-main);
+      letter-spacing: 0.02em;
+    }
+
+    .chat-st {
+      font-size: 0.8rem;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 2px;
+    }
+
+    .chat-st::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 5px var(--gold);
+    }
+
+    .chat-body {
+      padding: 1.5rem;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .msg {
+      display: flex;
+      gap: 1rem;
+      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes slideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .msg.user {
+      flex-direction: row-reverse;
+    }
+
+    .bubble {
+      max-width: 80%;
+      padding: 1rem 1.2rem;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .bubble-bot {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 4px 16px 16px 16px;
+    }
+
+    .bubble-bot strong {
+      color: var(--gold);
+    }
+
+    .bubble-user {
+      background: var(--gold);
+      color: var(--bg-dark);
+      border-radius: 16px 4px 16px 16px;
+      font-weight: 500;
+      box-shadow: 0 4px 15px var(--gold-glow);
+    }
+
+    .msg-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+      margin-top: 4px;
+      font-weight: bold;
+      font-family: var(--ff-display);
+    }
+
+    .typing-ind {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0.5rem 0.2rem;
+    }
+
+    .td {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: ta 1.4s infinite ease-in-out both;
+    }
+
+    .td:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    .td:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+
+    @keyframes ta {
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0);
+      }
+
+      40% {
+        transform: scale(1);
+      }
+    }
+
+    .chat-input-row {
+      padding: 1.2rem 1.5rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    #chatInput {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 0.9rem 1.2rem;
+      font-family: var(--ff-body);
+      font-size: 0.95rem;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    #chatInput:focus {
+      border-color: var(--gold);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 2px rgba(245, 200, 66, 0.2);
+    }
+
+    #chatInput::placeholder {
+      color: var(--text-muted);
+    }
+
+    .chat-send-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      flex-shrink: 0;
+      color: var(--bg-dark);
+      box-shadow: 0 4px 15px var(--gold-glow);
+    }
+
+    .chat-send-btn:hover {
+      background: var(--gold-dark);
+      transform: scale(1.05);
+    }
+
+    /* ── SERVICES ── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .srv-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 3rem 2rem;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+
+    .srv-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at top right, rgba(245, 200, 66, 0.1), transparent 50%);
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+
+    .srv-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--gold);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .srv-card:hover::before {
+      opacity: 1;
+    }
+
+    .srv-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: rgba(245, 200, 66, 0.1);
+      border: 1px solid rgba(245, 200, 66, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: var(--gold);
+    }
+
+    .srv-card h3 {
+      font-family: var(--ff-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .srv-card p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      line-height: 1.7;
+    }
+
+    /* ── PRICING ── */
+    .currency-toggle {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 0 auto 3rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.4rem;
+      border-radius: 50px;
+      width: max-content;
+      border: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+
+    .curr-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.6rem 1.5rem;
+      border-radius: 50px;
+      font-family: var(--ff-body);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .curr-btn:hover {
+      color: var(--text-main);
+    }
+
+    .curr-btn.active {
+      background: var(--gold);
+      color: var(--bg-dark);
+      box-shadow: 0 4px 15px var(--gold-glow);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      align-items: center;
+      margin-top: 3rem;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 3rem 2rem;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      backdrop-filter: blur(12px);
+      position: relative;
+    }
+
+    .pricing-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .pricing-card.popular {
+      border: 1px solid var(--gold);
+      background: rgba(245, 200, 66, 0.05);
+      transform: scale(1.05);
+      z-index: 2;
+    }
+
+    .pricing-card.popular:hover {
+      transform: scale(1.05) translateY(-8px);
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: var(--bg-dark);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.3rem 1rem;
+      border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      box-shadow: 0 4px 15px var(--gold-glow);
+      white-space: nowrap;
+    }
+
+    .pc-name {
+      font-family: var(--ff-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .pc-price-box {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pc-price {
+      font-family: var(--ff-display);
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .pc-price span {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .pc-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .pc-features {
+      list-style: none;
+      flex: 1;
+      margin-bottom: 2.5rem;
+    }
+
+    .pc-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .pc-features li svg {
+      color: var(--gold);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .pc-btn {
+      width: 100%;
+      text-align: center;
+      display: block;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+      font-family: var(--ff-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+    }
+
+    .pc-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--gold);
+    }
+
+    .pricing-card.popular .pc-btn {
+      background: var(--gold);
+      color: var(--bg-dark);
+      border: none;
+      box-shadow: 0 8px 25px var(--gold-glow);
+    }
+
+    .pricing-card.popular .pc-btn:hover {
+      background: var(--gold-dark);
+      transform: translateY(-2px);
+    }
+
+    /* ── CONTACT ── */
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .c-items {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    .c-item {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .c-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      color: var(--gold);
+    }
+
+    .c-lbl {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.2rem;
+    }
+
+    .c-val {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .cf-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .cf-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .cf-field.full {
+      grid-column: 1/-1;
+    }
+
+    .cf-field label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .cf-submit {
+      margin-top: 2rem;
+      width: 100%;
+      background: var(--gold);
+      color: var(--bg-dark);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 1.2rem;
+      font-family: var(--ff-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 8px 25px var(--gold-glow);
+    }
+
+    .cf-submit:hover {
+      transform: translateY(-2px);
+      background: var(--gold-dark);
+      box-shadow: 0 12px 35px var(--gold-glow);
+    }
+
+    .cf-success {
+      display: none;
+      text-align: center;
+      padding: 3rem;
+      background: rgba(245, 200, 66, 0.05);
+      border: 1px solid var(--gold);
+      border-radius: var(--radius);
+    }
+
+    /* ── CHECKOUT MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .checkout-card {
+      background: #0B0F19;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 480px;
+      padding: 2.5rem;
+      position: relative;
+      transform: translateY(20px) scale(0.95);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-overlay.active .checkout-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 2rem;
+      cursor: pointer;
+      transition: color 0.2s;
+      line-height: 1;
+    }
+
+    .close-modal:hover {
+      color: var(--text-main);
+    }
+
+    .ck-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .ck-title {
+      font-family: var(--ff-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.5rem;
+    }
+
+    .ck-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .ck-amount {
+      font-family: var(--ff-display);
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: var(--gold);
+      margin-top: 1rem;
+      text-shadow: 0 0 20px var(--gold-glow);
+    }
+
+    .ck-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .ck-row {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .ck-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      flex: 1;
+    }
+
+    .ck-field label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .ck-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 0.9rem 1rem;
+      font-family: var(--ff-body);
+      font-size: 1rem;
+      color: var(--text-main);
+      transition: all 0.3s;
+    }
+
+    .ck-input:focus {
+      border-color: var(--gold);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(245, 200, 66, 0.2);
+    }
+
+    .ck-input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .ck-btn {
+      background: var(--text-main);
+      color: var(--bg-dark);
+      border: none;
+      border-radius: 8px;
+      padding: 1.2rem;
+      font-family: var(--ff-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .ck-btn:hover {
+      background: var(--gold);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px var(--gold-glow);
+    }
+
+    .ck-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .ck-loader {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0, 0, 0, 0.1);
+      border-top-color: var(--bg-dark);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .ck-success {
+      display: none;
+      text-align: center;
+      padding: 2rem 0;
+    }
+
+    .ck-success-icon {
+      font-size: 4rem;
+      color: #10B981;
+      margin-bottom: 1rem;
+      animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes scaleIn {
+      from {
+        transform: scale(0);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .ck-success-title {
+      font-family: var(--ff-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 1rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 60px 6% 30px;
+      border-top: 1px solid var(--border);
+    }
+
+    .foot-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .foot-logo {
+      font-family: var(--ff-display);
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .foot-logo span {
+      color: var(--gold);
+    }
+
+    .foot-links {
+      display: flex;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .foot-links a {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      transition: color 0.2s;
+      font-weight: 500;
+    }
+
+    .foot-links a:hover {
+      color: var(--gold);
+    }
+
+    .foot-bottom {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .foot-copy {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* ── FADE ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .d1 {
+      transition-delay: 0.1s;
+    }
+
+    .d2 {
+      transition-delay: 0.2s;
+    }
+
+    .d3 {
+      transition-delay: 0.3s;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:960px) {
+
+      .estimator-layout,
+      .chat-layout,
+      .contact-layout {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .services-grid,
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pricing-card.popular {
+        transform: scale(1);
+      }
+
+      .pricing-card.popular:hover {
+        transform: translateY(-8px);
+      }
+
+      .result-panel {
+        position: static;
+      }
+    }
+
+    @media(max-width:768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      h1.hero-title {
+        font-size: 2.5rem;
+      }
+
+      .hero-stats {
+        gap: 2rem;
+      }
+
+      .form-grid-2,
+      .cf-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .foot-top {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .foot-links {
+        justify-content: center;
+      }
+
+      .foot-bottom {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="logo">
+      <div class="logo-dot"></div>Bati<span>COST</span>
+    </div>
+    <div class="nav-links">
+      <a href="#estimator" data-i18n="nav_calc">Calculateur</a>
+      <a href="#chatbot" data-i18n="nav_ai">Assistant IA</a>
+      <a href="#services" data-i18n="nav_srv">Services</a>
+      <a href="#pricing" data-i18n="nav_price">Tarifs</a>
+      <a href="#contact" data-i18n="nav_contact">Contact</a>
+      <a href="#chatbot" class="nav-btn" data-i18n="nav_btn">Lancer l'estimation</a>
+    </div>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('fr')">FR</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('ar')">AR</button>
+    </div>
+    <div class="hamburger" id="hbg" onclick="toggleMob()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+  <div class="mob-menu" id="mobMenu">
+    <a href="#estimator" onclick="closeMob()">Calculateur</a>
+    <a href="#chatbot" onclick="closeMob()">Assistant IA</a>
+    <a href="#services" onclick="closeMob()">Services</a>
+    <a href="#pricing" onclick="closeMob()">Tarifs</a>
+    <a href="#contact" onclick="closeMob()">Contact</a>
+  </div>
+
+  <!-- HERO -->
+  <section id="home">
+    <div class="hero-content">
+      <div class="hero-badge"><span class="hb-dot"></span><span data-i18n="hero_badge">Plateforme BTP Nouvelle Génération</span></div>
+      <h1 class="hero-title" data-i18n="hero_title">L'avenir de l'estimation BTP est <em>intelligent</em>.</h1>
+      <p class="hero-sub" data-i18n="hero_sub">Des devis instantanés précis et un assistant IA en temps réel pour révolutionner la gestion de
+        vos projets de construction au Maroc.</p>
+      <a href="#estimator" class="hero-cta"><span data-i18n="hero_cta">Découvrir la plateforme</span> →</a>
+      <div class="hero-stats">
+        <div class="h-stat">
+          <div class="hn">40%</div>
+          <div class="hl">Gain de productivité</div>
+        </div>
+        <div class="h-stat">
+          <div class="hn">100%</div>
+          <div class="hl">IA Intégrée</div>
+        </div>
+        <div class="h-stat">
+          <div class="hn">Zero</div>
+          <div class="hl">Erreurs de calcul</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESTIMATOR -->
+  <section id="estimator">
+    <span class="sec-label reveal">Calcul de coût</span>
+    <h2 class="sec-title reveal">Estimez votre <em>projet</em></h2>
+    <p class="sec-desc reveal">L'algorithme BatiCOST calcule instantanément les besoins en matériaux et le coût global
+      basé sur les standards marocains.</p>
+    <div class="estimator-layout">
+      <div class="glass-card reveal">
+        <div class="form-row">
+          <label>Surface plancher (m²)</label>
+          <input type="number" class="form-input" id="e_surface" placeholder="Ex : 120" min="10"
+            oninput="calcEstim()" />
+        </div>
+        <div class="form-grid-2">
+          <div class="form-row">
+            <label>Niveaux (Étages)</label>
+            <input type="number" class="form-input" id="e_etages" placeholder="Ex : 2" min="1" max="30" value="1"
+              oninput="calcEstim()" />
+          </div>
+          <div class="form-row">
+            <label>Finition</label>
+            <select class="form-input" id="e_qualite" onchange="calcEstim()">
+              <option value="eco">Économique</option>
+              <option value="std" selected>Standard</option>
+              <option value="luxe">Luxe Premium</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Système structurel</label>
+          <select class="form-input" id="e_type" onchange="calcEstim()">
+            <option value="beton" selected>Ossature Béton Armé</option>
+            <option value="acier">Charpente Métallique</option>
+            <option value="mix">Structure Mixte</option>
+            <option value="maconnerie">Maçonnerie Portante</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Localisation</label>
+          <select class="form-input" id="e_region" onchange="calcEstim()">
+            <option value="1.0" selected>Agadir / Souss</option>
+            <option value="1.18">Casablanca / Rabat</option>
+            <option value="1.05">Marrakech</option>
+            <option value="0.95">Fès / Meknès</option>
+            <option value="1.08">Tanger / Nord</option>
+          </select>
+        </div>
+        <button class="calc-submit" onclick="calcEstim()">Générer l'estimation détaillée</button>
+      </div>
+
+      <div class="result-panel reveal d2" id="resultPanel">
+        <div class="rp-title">Rapport d'estimation financière</div>
+        <div class="glass-card" style="padding: 2rem;">
+          <div class="rp-empty" id="rpEmpty">
+            <span class="big-icon">📐</span>
+            Entrez la surface de votre projet pour visualiser l'analyse des coûts.
+          </div>
+          <div id="rpResult" style="display:none">
+            <div class="result-total">
+              <div class="rt-label">Budget Global Estimé</div>
+              <div class="rt-val" id="rTotal">—</div>
+              <div class="rt-sub" id="rPerM2">—</div>
+            </div>
+            <div class="mat-list">
+              <div class="mat-item">
+                <span class="mat-name">🏗️ Gros Œuvre & Structure</span>
+                <span class="mat-val" id="rGros">—</span>
+              </div>
+              <div class="mat-bar-wrap">
+                <div class="mat-bar">
+                  <div class="mat-bar-fill" id="barGros" style="width:0%"></div>
+                </div>
+              </div>
+
+              <div class="mat-item" style="margin-top:1rem">
+                <span class="mat-name">✨ Second Œuvre & Finitions</span>
+                <span class="mat-val" id="rSecond">—</span>
+              </div>
+              <div class="mat-bar-wrap">
+                <div class="mat-bar">
+                  <div class="mat-bar-fill" id="barSecond"
+                    style="width:0%; background: linear-gradient(90deg, #94A3B8, #FFFFFF);"></div>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <div class="mat-item" style="flex:1; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px;">
+                  <span class="mat-name">🧱 Béton</span>
+                  <span class="mat-val" id="rBeton">—</span>
+                </div>
+                <div class="mat-item" style="flex:1; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px;">
+                  <span class="mat-name">🔩 Acier</span>
+                  <span class="mat-val" id="rAcier">—</span>
+                </div>
+              </div>
+            </div>
+            <div class="result-range">
+              <div class="rr-card">
+                <div class="rrc-label">Fourchette Basse</div>
+                <div class="rrc-val" id="rLow">—</div>
+              </div>
+              <div class="rr-card">
+                <div class="rrc-label">Fourchette Haute</div>
+                <div class="rrc-val" id="rHigh">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHATBOT -->
+  <section id="chatbot">
+    <div class="chat-layout">
+      <div class="chat-info reveal">
+        <span class="sec-label">Intelligence Artificielle</span>
+        <h2 class="sec-title">L'expert BTP <em>dans votre poche</em></h2>
+        <p class="sec-desc">Connecté en direct au moteur d'IA. Posez vos questions d'ingénierie, d'architecture, ou de
+          normes BTP marocaines et obtenez des réponses précises instantanément.</p>
+        <div class="chat-samples">
+          <div class="sample-q"
+            onclick="askSample('Quelle est la résistance caractéristique du béton standard au Maroc (B25) ?')"><i>💡</i>
+            Résistance du béton B25 ?</div>
+          <div class="sample-q" onclick="askSample('Comment calculer la section d\'un poteau en béton armé ?')">
+            <i>📐</i> Calcul section poteau ?
+          </div>
+          <div class="sample-q"
+            onclick="askSample('Quelles sont les normes parasismiques (RPS 2011) applicables à Agadir ?')"><i>🌍</i>
+            Normes parasismiques Agadir ?</div>
+          <div class="sample-q" onclick="askSample('Prix moyen de la main d\'oeuvre pour la maçonnerie ?')"><i>💰</i>
+            Prix main d'oeuvre maçonnerie ?</div>
+        </div>
+      </div>
+      <div class="chat-window reveal d2">
+        <div class="chat-top">
+          <div class="chat-avatar">AI</div>
+          <div>
+            <div class="chat-nm">BatiCOST Intelligence</div>
+            <div class="chat-st">Système connecté et opérationnel</div>
+          </div>
+        </div>
+        <div class="chat-body" id="chatBody">
+          <div class="msg" style="animation-delay: 0.2s">
+            <div class="msg-icon">AI</div>
+            <div class="bubble bubble-bot">Bonjour. Je suis l'IA de BatiCOST, votre ingénieur conseil virtuel. Je suis
+              prêt à analyser vos requêtes techniques, vos calculs de structure ou vos questions sur les coûts de
+              construction. Comment puis-je vous assister aujourd'hui ?</div>
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <input id="chatInput" type="text" placeholder="Entrez votre requête technique..."
+            onkeydown="if(event.key==='Enter')sendChat()" />
+          <button class="chat-send-btn" onclick="sendChat()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <span class="sec-label reveal">Solutions</span>
+    <h2 class="sec-title reveal">Une expertise <em>à 360°</em></h2>
+    <div class="services-grid">
+      <div class="srv-card reveal d1">
+        <div class="srv-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="3" y1="9" x2="21" y2="9"></line>
+            <line x1="9" y1="21" x2="9" y2="9"></line>
+          </svg>
+        </div>
+        <h3>Analyse Financière</h3>
+        <p>Des algorithmes précis pour évaluer vos coûts de construction en temps réel, incluant la variation des prix
+          des matériaux sur le marché marocain.</p>
+      </div>
+      <div class="srv-card reveal d2">
+        <div class="srv-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+            </path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+        </div>
+        <h3>Ingénierie IA</h3>
+        <p>Un assistant virtuel propulsé par des LLMs de pointe pour répondre instantanément à vos interrogations sur la
+          structure et les normes.</p>
+      </div>
+      <div class="srv-card reveal d3">
+        <div class="srv-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <h3>Optimisation de Projet</h3>
+        <p>Minimisez les risques et optimisez l'utilisation des matériaux grâce à nos recommandations basées sur
+          l'analyse de milliers de chantiers.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <span class="sec-label reveal">Tarifs</span>
+    <h2 class="sec-title reveal">Choisissez votre <em>abonnement</em></h2>
+    
+    <div class="currency-toggle reveal">
+      <button class="curr-btn active" onclick="setCurrency('MAD')">MAD</button>
+      <button class="curr-btn" onclick="setCurrency('EUR')">EUR</button>
+      <button class="curr-btn" onclick="setCurrency('USD')">USD</button>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="pricing-card reveal d1">
+        <div class="pc-name">Indépendant</div>
+        <div class="pc-price-box">
+          <div class="pc-price">
+            <strong class="price-val" data-base="149" style="transition: opacity 0.3s; font-weight: 800;">149</strong><span class="price-curr" style="transition: opacity 0.3s;">MAD</span>
+          </div>
+          <div class="pc-sub">par mois</div>
+        </div>
+        <ul class="pc-features">
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg> Calculateur de coûts standard</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg> Jusqu'à 3 projets sauvegardés</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg> Assistant IA (requêtes basiques)</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg> Support par email (48h)</li>
+        </ul>
+        <a href="#" class="pc-btn" onclick="openPaymentModal('Indépendant', 149); return false;">Commencer</a>
+      </div>
+
+      <div class="pricing-card popular reveal d2">
+        <div class="popular-badge">Recommandé</div>
+        <div class="pc-name">Professionnel</div>
+        <div class="pc-price-box">
+          <div class="pc-price">
+            <strong class="price-val" data-base="490" style="transition: opacity 0.3s; font-weight: 800;">490</strong><span class="price-curr" style="transition: opacity 0.3s;">MAD</span>
+          </div>
+          <div class="pc-sub">par mois</div>
+        </div>
+        <ul class="pc-features">
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg> Toutes les fonctionnalités Indépendant</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg> Création de projets en illimité</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg> Export PDF & Excel détaillé</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg> Assistant IA prioritaire (LLMs avancés)</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg> Personnalisation des prix locaux</li>
+        </ul>
+        <a href="#" class="pc-btn" onclick="openPaymentModal('Professionnel', 490); return false;">Choisir Pro</a>
+      </div>
+
+      <div class="pricing-card reveal d3">
+        <div class="pc-name">Entreprise</div>
+        <div class="pc-price-box">
+          <div class="pc-price">
+            <strong class="price-val" data-base="1490" style="transition: opacity 0.3s; font-weight: 800;">1 490</strong><span class="price-curr" style="transition: opacity 0.3s;">MAD</span>
+          </div>
+          <div class="pc-sub">par mois</div>
+        </div>
+        <ul class="pc-features">
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg> Toutes les fonctionnalités Professionnel</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg> Jusqu'à 10 comptes utilisateurs</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg> Base matériaux en temps réel</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg> Intégration API & BIM (Revit/ArchiCAD)</li>
+          <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg> Support technique prioritaire 24/7</li>
+        </ul>
+        <a href="#" class="pc-btn" onclick="openPaymentModal('Entreprise', 1490); return false;">Contacter les
+          ventes</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-layout">
+      <div class="contact-info reveal">
+        <span class="sec-label">Support & Ventes</span>
+        <h2 class="sec-title">Initions votre<br><em>prochain projet</em></h2>
+        <p class="sec-desc" style="margin-bottom: 2rem;">Notre équipe d'ingénieurs est prête à vous accompagner pour
+          l'étude détaillée de votre projet.</p>
+        <div class="c-items">
+          <div class="c-item">
+            <div class="c-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg></div>
+            <div>
+              <div class="c-lbl">Email Pro</div>
+              <div class="c-val">baticost@gmail.com</div>
+            </div>
+          </div>
+          <div class="c-item">
+            <div class="c-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path
+                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                </path>
+              </svg></div>
+            <div>
+              <div class="c-lbl">Ligne Directe</div>
+              <div class="c-val">+212 718 53 64 27</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="glass-card reveal d2">
+        <div id="cfForm">
+          <div class="cf-grid">
+            <div class="cf-field"><label>Prénom & Nom</label><input type="text" class="form-input"
+                placeholder="John Doe" id="cf_nom" /></div>
+            <div class="cf-field"><label>Entreprise</label><input type="text" class="form-input"
+                placeholder="BatiTech SARL" id="cf_ent" /></div>
+            <div class="cf-field full"><label>Email Professionnel</label><input type="email" class="form-input"
+                placeholder="john@entreprise.ma" id="cf_email" /></div>
+            <div class="cf-field full"><label>Détails du projet</label><textarea class="form-input" rows="4"
+                placeholder="Décrivez vos besoins spécifiques..." id="cf_msg"></textarea></div>
+          </div>
+          <button class="cf-submit" onclick="submitContact()">Envoyer la demande</button>
+        </div>
+        <div class="cf-success" id="cfSuccess">
+          <div style="font-size:3rem;margin-bottom:1rem">🚀</div>
+          <strong style="font-family: var(--ff-display); font-size: 1.5rem; color: var(--gold);">Demande envoyée
+            !</strong><br>
+          <span style="color:var(--text-muted); display:block; margin-top:0.5rem;">Un expert vous contactera sous
+            24h.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="checkout-card">
+      <button class="close-modal" onclick="closePaymentModal()">×</button>
+
+      <div id="ckFlow">
+        <div class="ck-header">
+          <div class="ck-title">Paiement Sécurisé</div>
+          <div class="ck-subtitle">Abonnement <span id="ckPlanName"
+              style="color:var(--text-main); font-weight:600;">Pro</span></div>
+          <div class="ck-amount" id="ckAmount">490 MAD</div>
+        </div>
+
+        <form class="ck-form" onsubmit="processPayment(event)">
+          <div class="ck-field">
+            <label>Email</label>
+            <input type="email" class="ck-input" placeholder="vous@entreprise.ma" required />
+          </div>
+          <div class="ck-field">
+            <label>Informations de la carte</label>
+            <div style="position:relative;">
+              <input type="text" class="ck-input" placeholder="0000 0000 0000 0000"
+                style="width:100%; font-family:monospace; letter-spacing: 2px;" maxlength="19" required />
+              <svg style="position:absolute; right:12px; top:12px; color:rgba(255,255,255,0.3);" width="24" height="24"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+              </svg>
+            </div>
+          </div>
+          <div class="ck-row">
+            <div class="ck-field">
+              <label>Expiration</label>
+              <input type="text" class="ck-input" placeholder="MM/AA" maxlength="5" required />
+            </div>
+            <div class="ck-field">
+              <label>CVC</label>
+              <input type="password" class="ck-input" placeholder="123" maxlength="4" required />
+            </div>
+          </div>
+          <div class="ck-field">
+            <label>Nom sur la carte</label>
+            <input type="text" class="ck-input" placeholder="Nom Prénom" required />
+          </div>
+
+          <button type="submit" class="ck-btn" id="ckSubmitBtn">
+            <span id="ckBtnText">Payer maintenant</span>
+            <div class="ck-loader" id="ckLoader"></div>
+          </button>
+          <div style="text-align: center; margin-top: 10px; font-size: 0.75rem; color: var(--text-muted);">
+            Propulsé par la sécurité <strong>Stripe</strong>
+          </div>
+        </form>
+      </div>
+
+      <div class="ck-success" id="ckSuccess">
+        <div class="ck-success-icon">✓</div>
+        <div class="ck-success-title">Paiement Réussi !</div>
+        <p style="color:var(--text-muted); font-size:0.95rem; line-height: 1.6;">Merci pour votre confiance. Votre
+          compte a été mis à niveau avec succès. Vous recevrez une facture par email d'ici quelques instants.</p>
+        <button class="ck-btn" style="width:100%; margin-top:2rem;" onclick="closePaymentModal()">Accéder à mon
+          espace</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot-top">
+      <div class="foot-logo">Bati<span>COST</span></div>
+      <div class="foot-links">
+        <a href="#home">Accueil</a>
+        <a href="#estimator">Technologie</a>
+        <a href="#chatbot">IA</a>
+        <a href="#pricing">Tarifs</a>
+        <a href="#contact">Entreprise</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="foot-copy">© 2024 BatiCOST Solutions. Propulsé par l'Intelligence Artificielle.</div>
+      <div class="foot-copy">Conçu pour l'excellence en ingénierie.</div>
+    </div>
+  </footer>
+
+  <script>
+    // ── NAV ──
+    function toggleMob() { document.getElementById('mobMenu').classList.toggle('open') }
+    function closeMob() { document.getElementById('mobMenu').classList.remove('open') }
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      if (window.scrollY > 20) {
+        nav.style.background = 'rgba(11, 15, 25, 0.9)';
+        nav.style.boxShadow = '0 4px 30px rgba(0,0,0,0.5)';
+      } else {
+        nav.style.background = 'rgba(11, 15, 25, 0.7)';
+        nav.style.boxShadow = 'none';
+      }
+    });
+
+    // ── REVEAL ──
+    const ro = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+    // ── ESTIMATOR ──
+    const priceMap = {
+      beton: { eco: 4800, std: 6500, luxe: 9500 },
+      acier: { eco: 5200, std: 7200, luxe: 10500 },
+      mix: { eco: 5500, std: 7800, luxe: 11500 },
+      maconnerie: { eco: 3800, std: 5200, luxe: 7800 }
+    };
+    const betonRatio = { beton: 0.30, acier: 0.10, mix: 0.18, maconnerie: 0.22 };
+    const acierRatio = { beton: 35, acier: 55, mix: 45, maconnerie: 18 };
+
+    function fmtK(n) { return (Math.round(n / 1000)).toLocaleString('fr-FR') + 'k MAD'; }
+
+    function calcEstim() {
+      const surf = parseFloat(document.getElementById('e_surface').value) || 0;
+      const etages = Math.max(1, parseFloat(document.getElementById('e_etages').value) || 1);
+      const qual = document.getElementById('e_qualite').value;
+      const type = document.getElementById('e_type').value;
+      const region = parseFloat(document.getElementById('e_region').value) || 1;
+
+      if (surf < 10) return;
+
+      const surfTot = surf * etages;
+      const prixM2 = priceMap[type][qual] * region;
+      const total = surfTot * prixM2;
+      const gros = total * 0.55;
+      const second = total * 0.35;
+      const beton = Math.round(surfTot * betonRatio[type]);
+      const acier = Math.round(surfTot * acierRatio[type]);
+
+      document.getElementById('rpEmpty').style.display = 'none';
+      document.getElementById('rpResult').style.display = 'block';
+
+      // Animation des chiffres
+      document.getElementById('rTotal').textContent = fmtK(total);
+      document.getElementById('rPerM2').textContent = Math.round(prixM2).toLocaleString('fr-FR') + ' MAD / m²';
+      document.getElementById('rGros').textContent = fmtK(gros);
+      document.getElementById('rSecond').textContent = fmtK(second);
+      document.getElementById('rBeton').textContent = beton + ' m³';
+      document.getElementById('rAcier').textContent = acier.toLocaleString('fr-FR') + ' kg';
+      document.getElementById('rLow').textContent = fmtK(total * 0.85);
+      document.getElementById('rHigh').textContent = fmtK(total * 1.15);
+
+      // Reset animations
+      const bGros = document.getElementById('barGros');
+      const bSec = document.getElementById('barSecond');
+      bGros.style.width = '0%'; bSec.style.width = '0%';
+      setTimeout(() => { bGros.style.width = '70%'; bSec.style.width = '45%'; }, 100);
+    }
+
+    // ── LIVE AI CHATBOT ──
+    const OPENROUTER_API_KEY = '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';
+    const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
+    const AI_MODELS = [
+      'meta-llama/llama-3.2-3b-instruct:free',
+      'nvidia/nemotron-nano-9b-v2:free',
+      'google/gemma-4-31b-it:free'
+    ];
+
+    const chatHistory = [];
+    let isGenerating = false;
+
+    function getOpenRouterReferer() {
+      if (typeof location === 'undefined') return 'http://localhost';
+      if (location.protocol === 'file:') return 'http://127.0.0.1:5500'; // Common local server
+      return location.origin || 'http://localhost';
+    }
+
+    // Basic markdown parser for AI responses
+    function parseMarkdown(text) {
+      let html = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Bold
+      html = html.replace(/\*(.*?)\*/g, '<em>$1</em>'); // Italic
+      html = html.replace(/\n/g, '<br>'); // Newlines
+      html = html.replace(/- (.*?)<br>/g, '• $1<br>'); // Lists
+      return html;
+    }
+
+    async function fetchAiResponse(userText) {
+      const systemPrompt = "Tu es BatiCOST Intelligence, un expert technique BTP haut de gamme marocain. Tes réponses doivent être concises, professionnelles, précises et structurées. Utilise le MAD pour les prix. Formate le texte avec des mots en gras pour la lisibilité.";
+
+      const messages = [
+        { role: 'system', content: systemPrompt },
+        ...chatHistory,
+        { role: 'user', content: userText }
+      ];
+
+      let lastError = null;
+
+      // Try fallback models if the primary one is rate limited
+      for (const model of AI_MODELS) {
+        try {
+          const res = await fetch(OPENROUTER_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+              'HTTP-Referer': getOpenRouterReferer(),
+              'X-Title': 'BatiCOST Premium'
+            },
+            body: JSON.stringify({
+              model: model,
+              messages: messages,
+              temperature: 0.2,
+              max_tokens: 600
+            })
+          });
+
+          if (!res.ok) {
+            const errText = await res.text();
+            throw new Error(`HTTP ${res.status}: ${errText}`);
+          }
+
+          const data = await res.json();
+          const reply = data.choices?.[0]?.message?.content;
+          if (!reply) throw new Error("Réponse vide de l'IA.");
+          return reply;
+        } catch (err) {
+          console.warn(`Model ${model} failed:`, err);
+          lastError = err;
+          // If it's not a rate limit, we still try the next model just in case,
+          // but usually 429 is the main issue with free models.
+        }
+      }
+
+      throw lastError || new Error("Erreur de connexion au moteur d'IA.");
+    }
+
+    function appendMsg(text, isUser) {
+      const body = document.getElementById('chatBody');
+      const div = document.createElement('div');
+      div.className = 'msg' + (isUser ? ' user' : '');
+
+      if (isUser) {
+        div.innerHTML = `<div class="bubble bubble-user">${parseMarkdown(text)}</div>`;
+      } else {
+        div.innerHTML = `<div class="msg-icon">AI</div><div class="bubble bubble-bot">${parseMarkdown(text)}</div>`;
+      }
+
+      body.appendChild(div);
+      // Smooth scroll to bottom
+      body.scrollTo({ top: body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function showTyping() {
+      const body = document.getElementById('chatBody');
+      const div = document.createElement('div');
+      div.className = 'msg'; div.id = 'typing';
+      div.innerHTML = '<div class="msg-icon">AI</div><div class="bubble bubble-bot"><div class="typing-ind"><div class="td"></div><div class="td"></div><div class="td"></div></div></div>';
+      body.appendChild(div);
+      body.scrollTo({ top: body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function hideTyping() {
+      const t = document.getElementById('typing');
+      if (t) t.remove();
+    }
+
+    async function sendChat() {
+      if (isGenerating) return;
+      const inp = document.getElementById('chatInput');
+      const msg = inp.value.trim();
+      if (!msg) return;
+
+      appendMsg(msg, true);
+      inp.value = '';
+      isGenerating = true;
+      showTyping();
+
+      try {
+        const reply = await fetchAiResponse(msg);
+        hideTyping();
+        appendMsg(reply, false);
+
+        chatHistory.push({ role: 'user', content: msg });
+        chatHistory.push({ role: 'assistant', content: reply });
+        if (chatHistory.length > 10) chatHistory.splice(0, chatHistory.length - 10);
+      } catch (err) {
+        hideTyping();
+        console.error("Chatbot error:", err);
+        let errorMsg = "⚠️ Le système est actuellement surchargé ou le fournisseur d'IA rencontre une erreur.";
+        if (location.protocol === 'file:') {
+          errorMsg += "<br><br><i>Note : L'ouverture du fichier en local (file://) peut bloquer l'API. Essayez de lancer un serveur local (ex: Live Server).</i>";
+        }
+        appendMsg(errorMsg, false);
+      } finally {
+        isGenerating = false;
+      }
+    }
+
+    function askSample(q) {
+      document.getElementById('chatInput').value = q;
+      document.getElementById('chatbot').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(sendChat, 300);
+    }
+
+    // ── CONTACT ──
+    function submitContact() {
+      const p = document.getElementById('cf_nom').value.trim();
+      const e = document.getElementById('cf_email').value.trim();
+      const m = document.getElementById('cf_msg').value.trim();
+      if (!p || !e || !m) { alert('Veuillez remplir les informations requises.'); return; }
+
+      document.getElementById('cfForm').style.opacity = '0';
+      setTimeout(() => {
+        document.getElementById('cfForm').style.display = 'none';
+        const success = document.getElementById('cfSuccess');
+        success.style.display = 'block';
+        success.style.animation = 'slideUp 0.5s forwards';
+      }, 300);
+    }
+
+    // ── CURRENCY ──
+    let currentCurrency = 'MAD';
+    const currMap = {
+      'MAD': { rate: 1, symbol: 'MAD' },
+      'EUR': { rate: 0.092, symbol: '€' },
+      'USD': { rate: 0.10, symbol: '$' }
+    };
+
+    function setCurrency(curr) {
+      if (curr === currentCurrency) return;
+      currentCurrency = curr;
+
+      document.querySelectorAll('.curr-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent === curr);
+      });
+
+      document.querySelectorAll('.price-val').forEach(el => {
+        const base = parseInt(el.getAttribute('data-base'));
+        const val = Math.round(base * currMap[curr].rate);
+        el.style.opacity = '0';
+        setTimeout(() => {
+          el.textContent = val.toLocaleString('fr-FR');
+          el.style.opacity = '1';
+        }, 300);
+      });
+
+      document.querySelectorAll('.price-curr').forEach(el => {
+        el.style.opacity = '0';
+        setTimeout(() => {
+          el.textContent = currMap[curr].symbol;
+          el.style.opacity = '1';
+        }, 300);
+      });
+    }
+
+    // ── CHECKOUT MODAL ──
+    function openPaymentModal(planName, basePrice) {
+      const val = Math.round(basePrice * currMap[currentCurrency].rate);
+      const sym = currMap[currentCurrency].symbol;
+
+      document.getElementById('ckPlanName').textContent = planName;
+      document.getElementById('ckAmount').textContent = val.toLocaleString('fr-FR') + ' ' + sym;
+
+      document.getElementById('ckFlow').style.display = 'block';
+      document.getElementById('ckSuccess').style.display = 'none';
+
+      document.getElementById('checkoutModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePaymentModal() {
+      document.getElementById('checkoutModal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    function processPayment(e) {
+      e.preventDefault();
+      const btnText = document.getElementById('ckBtnText');
+      const loader = document.getElementById('ckLoader');
+      const submitBtn = document.getElementById('ckSubmitBtn');
+
+      btnText.textContent = 'Traitement Sécurisé...';
+      loader.style.display = 'block';
+      submitBtn.disabled = true;
+
+      // Simulation d'appel API de paiement
+      setTimeout(() => {
+        document.getElementById('ckFlow').style.display = 'none';
+        document.getElementById('ckSuccess').style.display = 'block';
+
+        // Reset pour la prochaine ouverture
+        btnText.textContent = 'Payer maintenant';
+        loader.style.display = 'none';
+        submitBtn.disabled = false;
+        e.target.reset();
+      }, 2500);
+    }
+    // ── MULTI-LANGUAGE (i18n) ──
+    const i18n = {
+      fr: {
+        ".nav-links a[href='#estimator']": "Calculateur", ".nav-links a[href='#chatbot']": "Assistant IA", ".nav-links a[href='#services']": "Services", ".nav-links a[href='#pricing']": "Tarifs", ".nav-links a[href='#contact']": "Contact", ".nav-btn": "Lancer l'estimation",
+        ".hero-title": "L'avenir de l'estimation BTP est <em>intelligent</em>.", ".hero-sub": "Des devis instantanés précis et un assistant IA en temps réel pour révolutionner la gestion de vos projets de construction au Maroc.", ".hero-cta span": "Découvrir la plateforme", ".hero-badge span[data-i18n]": "Plateforme BTP Nouvelle Génération",
+        ".h-stat:nth-child(1) .hl": "Gain de productivité", ".h-stat:nth-child(2) .hl": "IA Intégrée", ".h-stat:nth-child(3) .hl": "Erreurs de calcul",
+        "#estimator .sec-label": "Calcul de coût", "#estimator .sec-title": "Estimez votre <em>projet</em>", "#estimator .sec-desc": "L'algorithme BatiCOST calcule instantanément les besoins en matériaux et le coût global basé sur les standards marocains.",
+        ".calc-submit": "Générer l'estimation détaillée", ".rp-title": "Rapport d'estimation financière", ".rt-label": "Budget Global Estimé",
+        "#chatbot .sec-label": "Intelligence Artificielle", "#chatbot .sec-title": "L'expert BTP <em>dans votre poche</em>", "#chatbot .sec-desc": "Connecté en direct au moteur d'IA. Posez vos questions d'ingénierie, d'architecture, ou de normes BTP marocaines et obtenez des réponses précises instantanément.",
+        "#services .sec-label": "Solutions", "#services .sec-title": "Une expertise <em>à 360°</em>",
+        ".srv-card.d1 h3": "Analyse Financière", ".srv-card.d1 p": "Des algorithmes précis pour évaluer vos coûts de construction en temps réel, incluant la variation des prix des matériaux sur le marché marocain.",
+        ".srv-card.d2 h3": "Ingénierie IA", ".srv-card.d2 p": "Un assistant virtuel propulsé par des LLMs de pointe pour répondre instantanément à vos interrogations sur la structure et les normes.",
+        ".srv-card.d3 h3": "Optimisation de Projet", ".srv-card.d3 p": "Minimisez les risques et optimisez l'utilisation des matériaux grâce à nos recommandations basées sur l'analyse de milliers de chantiers.",
+        "#pricing .sec-label": "Tarifs", "#pricing .sec-title": "Choisissez votre <em>abonnement</em>",
+        ".pricing-card.d1 .pc-name": "Indépendant", ".pricing-card.d1 .pc-sub": "par mois", ".pricing-card.d1 .pc-btn": "Commencer",
+        ".pricing-card.d2 .popular-badge": "Recommandé", ".pricing-card.d2 .pc-name": "Professionnel", ".pricing-card.d2 .pc-sub": "par mois", ".pricing-card.d2 .pc-btn": "Choisir Pro",
+        ".pricing-card.d3 .pc-name": "Entreprise", ".pricing-card.d3 .pc-sub": "par mois", ".pricing-card.d3 .pc-btn": "Contacter les ventes",
+        "#contact .sec-label": "Support & Ventes", "#contact .sec-title": "Initions votre<br><em>prochain projet</em>", "#contact .sec-desc": "Notre équipe d'ingénieurs est prête à vous accompagner pour l'étude détaillée de votre projet.",
+        ".cf-submit": "Envoyer la demande", ".ck-title": "Paiement Sécurisé", ".ck-subtitle": "Abonnement <span id=\"ckPlanName\" style=\"color:var(--text-main); font-weight:600;\">Pro</span>", "#ckBtnText": "Payer maintenant"
+      },
+      en: {
+        ".nav-links a[href='#estimator']": "Estimator", ".nav-links a[href='#chatbot']": "AI Assistant", ".nav-links a[href='#services']": "Services", ".nav-links a[href='#pricing']": "Pricing", ".nav-links a[href='#contact']": "Contact", ".nav-btn": "Start Estimating",
+        ".hero-title": "The future of estimation is <em>smart</em>.", ".hero-sub": "Accurate instant quotes and a real-time AI assistant to revolutionize your construction project management in Morocco.", ".hero-cta span": "Discover Platform", ".hero-badge span[data-i18n]": "Next-Gen Construction Platform",
+        ".h-stat:nth-child(1) .hl": "Productivity Gain", ".h-stat:nth-child(2) .hl": "Integrated AI", ".h-stat:nth-child(3) .hl": "Calculation Errors",
+        "#estimator .sec-label": "Cost Calculation", "#estimator .sec-title": "Estimate your <em>project</em>", "#estimator .sec-desc": "The BatiCOST algorithm instantly calculates material needs and total cost based on Moroccan standards.",
+        ".calc-submit": "Generate Detailed Estimate", ".rp-title": "Financial Estimate Report", ".rt-label": "Estimated Global Budget",
+        "#chatbot .sec-label": "Artificial Intelligence", "#chatbot .sec-title": "The BTP expert <em>in your pocket</em>", "#chatbot .sec-desc": "Live connected to the AI engine. Ask your engineering, architecture, or Moroccan standard questions and get precise answers instantly.",
+        "#services .sec-label": "Solutions", "#services .sec-title": "360° <em>Expertise</em>",
+        ".srv-card.d1 h3": "Financial Analysis", ".srv-card.d1 p": "Precise algorithms to evaluate your construction costs in real time, including material price variations on the Moroccan market.",
+        ".srv-card.d2 h3": "AI Engineering", ".srv-card.d2 p": "A virtual assistant powered by cutting-edge LLMs to instantly answer your questions on structure and standards.",
+        ".srv-card.d3 h3": "Project Optimization", ".srv-card.d3 p": "Minimize risks and optimize material use with our recommendations based on the analysis of thousands of sites.",
+        "#pricing .sec-label": "Pricing", "#pricing .sec-title": "Choose your <em>plan</em>",
+        ".pricing-card.d1 .pc-name": "Independent", ".pricing-card.d1 .pc-sub": "per month", ".pricing-card.d1 .pc-btn": "Get Started",
+        ".pricing-card.d2 .popular-badge": "Recommended", ".pricing-card.d2 .pc-name": "Professional", ".pricing-card.d2 .pc-sub": "per month", ".pricing-card.d2 .pc-btn": "Choose Pro",
+        ".pricing-card.d3 .pc-name": "Enterprise", ".pricing-card.d3 .pc-sub": "per month", ".pricing-card.d3 .pc-btn": "Contact Sales",
+        "#contact .sec-label": "Support & Sales", "#contact .sec-title": "Let's start your<br><em>next project</em>", "#contact .sec-desc": "Our team of engineers is ready to assist you with the detailed study of your project.",
+        ".cf-submit": "Send Request", ".ck-title": "Secure Payment", ".ck-subtitle": "Subscription <span id=\"ckPlanName\" style=\"color:var(--text-main); font-weight:600;\">Pro</span>", "#ckBtnText": "Pay now"
+      },
+      ar: {
+        ".nav-links a[href='#estimator']": "الحاسبة", ".nav-links a[href='#chatbot']": "مساعد الذكاء الاصطناعي", ".nav-links a[href='#services']": "خدماتنا", ".nav-links a[href='#pricing']": "الأسعار", ".nav-links a[href='#contact']": "اتصل بنا", ".nav-btn": "ابدأ التقدير",
+        ".hero-title": "مستقبل تقدير البناء <em>ذكي</em>.", ".hero-sub": "عروض أسعار دقيقة وفورية ومساعد ذكاء اصطناعي في الوقت الفعلي لإحداث ثورة في إدارة مشاريع البناء الخاصة بك في المغرب.", ".hero-cta span": "اكتشف المنصة", ".hero-badge span[data-i18n]": "منصة البناء للجيل القادم",
+        ".h-stat:nth-child(1) .hl": "زيادة الإنتاجية", ".h-stat:nth-child(2) .hl": "ذكاء اصطناعي مدمج", ".h-stat:nth-child(3) .hl": "أخطاء حسابية",
+        "#estimator .sec-label": "حساب التكلفة", "#estimator .sec-title": "قدر <em>مشروعك</em>", "#estimator .sec-desc": "تقوم خوارزمية BatiCOST بحساب احتياجات المواد والتكلفة الإجمالية على الفور بناءً على المعايير المغربية.",
+        ".calc-submit": "إنشاء تقرير مفصل", ".rp-title": "تقرير التقدير المالي", ".rt-label": "الميزانية الإجمالية المقدرة",
+        "#chatbot .sec-label": "الذكاء الاصطناعي", "#chatbot .sec-title": "خبير البناء <em>في جيبك</em>", "#chatbot .sec-desc": "متصل مباشرة بمحرك الذكاء الاصطناعي. اطرح أسئلتك حول الهندسة أو العمارة أو المعايير المغربية واحصل على إجابات دقيقة على الفور.",
+        "#services .sec-label": "الحلول", "#services .sec-title": "خبرة <em>شاملة</em> 360°",
+        ".srv-card.d1 h3": "التحليل المالي", ".srv-card.d1 p": "خوارزميات دقيقة لتقييم تكاليف البناء في الوقت الفعلي، بما في ذلك تغيرات أسعار المواد في السوق المغربية.",
+        ".srv-card.d2 h3": "هندسة الذكاء الاصطناعي", ".srv-card.d2 p": "مساعد افتراضي مدعوم بأحدث النماذج للإجابة على الفور على أسئلتك حول الهياكل والمعايير.",
+        ".srv-card.d3 h3": "تحسين المشاريع", ".srv-card.d3 p": "تقليل المخاطر وتحسين استخدام المواد من خلال توصياتنا المستندة إلى تحليل آلاف مواقع العمل.",
+        "#pricing .sec-label": "الأسعار", "#pricing .sec-title": "اختر <em>باقتك</em>",
+        ".pricing-card.d1 .pc-name": "مستقل", ".pricing-card.d1 .pc-sub": "شهرياً", ".pricing-card.d1 .pc-btn": "ابدأ الآن",
+        ".pricing-card.d2 .popular-badge": "موصى به", ".pricing-card.d2 .pc-name": "محترف", ".pricing-card.d2 .pc-sub": "شهرياً", ".pricing-card.d2 .pc-btn": "اختر برو",
+        ".pricing-card.d3 .pc-name": "شركات", ".pricing-card.d3 .pc-sub": "شهرياً", ".pricing-card.d3 .pc-btn": "اتصل بالمبيعات",
+        "#contact .sec-label": "الدعم والمبيعات", "#contact .sec-title": "لنبدأ <em>مشروعك القادم</em>", "#contact .sec-desc": "فريق المهندسين لدينا مستعد لمساعدتك في الدراسة التفصيلية لمشروعك.",
+        ".cf-submit": "إرسال الطلب", ".ck-title": "دفع آمن", ".ck-subtitle": "اشتراك <span id=\"ckPlanName\" style=\"color:var(--text-main); font-weight:600;\">Pro</span>", "#ckBtnText": "ادفع الآن"
+      }
+    };
+
+    function setLang(lang) {
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
+      });
+
+      if (lang === 'ar') {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.lang = 'ar';
+      } else {
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.lang = lang;
+      }
+
+      const dict = i18n[lang];
+      for (const selector in dict) {
+        const els = document.querySelectorAll(selector);
+        els.forEach(el => {
+          el.style.opacity = '0';
+          setTimeout(() => {
+            el.innerHTML = dict[selector];
+            el.style.opacity = '1';
+          }, 300);
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>
